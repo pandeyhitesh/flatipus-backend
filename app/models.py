@@ -60,3 +60,31 @@ class Space(Base):
     chores = Column(Text, nullable=True)  # JSON string of chores
 
     house = relationship("House", back_populates="spaces")
+
+
+class Task(Base):
+    __tablename__ = 'tasks'
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    house_id = Column(UUID(as_uuid=True), ForeignKey('houses.id'), nullable=False)
+    space_id = Column(UUID(as_uuid=True), ForeignKey('spaces.id'), nullable=False)
+    created_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    repeat = Column(String, nullable=False)  # Values from TaskRepeat enum
+    is_completed = Column(Boolean, default=False)
+    updated_on = Column(DateTime, nullable=True)
+    updated_by = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=True)
+    
+
+class TaskAssignment(Base):
+    __tablename__ = 'task_assignments'
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    task_id = Column(UUID(as_uuid=True), ForeignKey('tasks.id'), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
+    scheduled_on = Column(DateTime, nullable=False)
+    completed_on = Column(DateTime, nullable=True)
+    status = Column(String, nullable=False)  # Values from TaskAssignmentStatus enum
+    is_completed = Column(Boolean, default=False)

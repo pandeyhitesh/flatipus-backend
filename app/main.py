@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 from app.api.routes import (
     auth_routes, house_routes,
-    space_routes)
+    space_routes, task_routes)
 from app.shared.database import Base, engine
 import os
 from dotenv import load_dotenv
@@ -17,3 +17,4 @@ app.add_middleware(
 app.include_router(auth_routes.router)
 app.include_router(house_routes.router)
 app.include_router(space_routes.router)
+app.include_router(task_routes.router)
