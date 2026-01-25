@@ -7,8 +7,12 @@ from app.features.space.application.dto.space_responses import (
     GetSpaceResponse
 )
 from app.features.space.application.dto.space_requests import (
-    CreateSpaceRequest
+    AddChoreRequest,
+    CreateSpaceRequest,
+    UpdateSpaceRequest
 )
+from app.features.space.application.use_cases.add_chore_to_space import AddChoreToSpaceUseCase
+from app.features.space.application.use_cases.remove_chore_from_space import RemoveChoreFromSpaceUseCase
 from app.features.space.infrastructure.repositories.space_repository import (
     SpaceRepositoryImpl
 )
@@ -29,6 +33,9 @@ from app.features.space.application.use_cases.delete_space import (
 )
 from app.features.space.application.use_cases.get_all_spaces import (
     GetAllSpacesUseCase
+)
+from app.features.space.application.use_cases.update_space import (
+    UpdateSpaceUseCase
 )
 
 
@@ -59,7 +66,7 @@ def create_space(
     use_case = CreateSpaceUseCase(space_repo, house_repo, member_repo)
     return use_case.execute(request, current_user)
 
-@router.delete('/delete/{space_id:uuid}')
+@router.delete('/{space_id:uuid}/delete')
 def delete_space(
     space_id: UUID,
     db: Session =Depends(get_db),
@@ -81,3 +88,45 @@ def get_all_spaces_in_house(
     member_repo = HouseMemberRepositoryImpl(db)
     use_case = GetAllSpacesUseCase(space_repo, house_repo, member_repo)
     return use_case.execute(house_id, current_user.id)
+
+
+@router.put('/{space_id:uuid}/update', response_model=GetSpaceResponse)
+def update_space(
+    space_id: UUID,
+    request: UpdateSpaceRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    space_repo = SpaceRepositoryImpl(db)
+    house_repo = HouseRepositoryImpl(db)
+    member_repo = HouseMemberRepositoryImpl(db)
+    use_case = UpdateSpaceUseCase(space_repo)
+    return use_case.execute(space_id, request)
+
+
+@router.post('/{space_id:uuid}/add-chore', response_model=GetSpaceResponse)
+def add_chore_to_space(
+    space_id: UUID,
+    chore_request: AddChoreRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    space_repo = SpaceRepositoryImpl(db)
+    house_repo = HouseRepositoryImpl(db)
+    member_repo = HouseMemberRepositoryImpl(db)
+    use_case = AddChoreToSpaceUseCase(space_repo)
+    return use_case.execute(space_id, chore_request)
+
+
+@router.delete('/{space_id:uuid}/remove-chore/{chore_id:uuid}', response_model=GetSpaceResponse)
+def remove_chore_from_space(
+    space_id: UUID,
+    chore_id: UUID,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    space_repo = SpaceRepositoryImpl(db)
+    house_repo = HouseRepositoryImpl(db)
+    member_repo = HouseMemberRepositoryImpl(db)
+    use_case = RemoveChoreFromSpaceUseCase(space_repo)
+    return use_case.execute(space_id, chore_id)

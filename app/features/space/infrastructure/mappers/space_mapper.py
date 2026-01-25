@@ -32,8 +32,7 @@ class SpaceMapper:
             
 
             for c in chores_dict:
-                print(f'@@@ Processing chore: {c}')
-                print(f'@@@ Parsed item: {c.get('items', [])}')
+                
                 chore_list.append(Chores(
                     id=UUID(c['id']),
                     space_id=space_id,

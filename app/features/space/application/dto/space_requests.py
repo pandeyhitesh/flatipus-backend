@@ -19,8 +19,25 @@ class CreateSpaceRequest(BaseModel):
     }
 
 
+class UpdateSpaceRequest(BaseModel):
+    name: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
 class DeleteSpaceRequest(BaseModel):
     space_id: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class AddChoreRequest(BaseModel):
+    space_id: UUID
+    chore: ChoresRequest
 
     model_config = {
         "from_attributes": True

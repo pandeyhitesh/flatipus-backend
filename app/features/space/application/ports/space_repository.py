@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from app.features.space.application.dto.space_requests import (
-    CreateSpaceRequest)
+    CreateSpaceRequest, UpdateSpaceRequest)
 from app.features.space.application.dto.space_responses import (
     GetSpaceResponse)
 
@@ -27,4 +27,28 @@ class ISpaceRepository(ABC):
 
     @abstractmethod
     def get_all_spaces_in_house(self, house_id: UUID) -> List[GetSpaceResponse] | None:
+        pass
+
+    @abstractmethod
+    def update(
+        self,
+        space_id: UUID,
+        request: UpdateSpaceRequest
+    ) -> GetSpaceResponse:
+        pass
+
+    @abstractmethod
+    def add_chore_to_space(
+        self,
+        space_id: UUID,
+        chore_request
+    ):
+        pass
+
+    @abstractmethod
+    def remove_chore_from_space(
+        self,
+        space_id: UUID,
+        chore_id: UUID
+    ):
         pass
