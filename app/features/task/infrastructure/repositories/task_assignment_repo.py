@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from uuid import UUID, uuid4
+from datetime import datetime
 
 from app.features.task.application.dto.task_assignment_requests import (
     UpdateTaskAssignmentStatusRequest)
@@ -45,13 +46,20 @@ class TaskAssignmentRepositoryImpl(ITaskAssignmentRepository):
 
         if request.status is not None:
             assignment.status = request.status
-        if request.completed_on is not None:
-            assignment.completed_on = request.completed_on
+            assignment.updated_on = datetime.utcnow()
 
         self.db.commit()
         self.db.refresh(assignment)
         return assignment
     
+
+    # request -> assignment_id: UUID
+    # reaponse -> Optional[TaskAssignmentResponse]
+    def get_assignment_by_id(self, assignment_id):
+        return self.db.query(TaskAssignment).filter(
+            TaskAssignment.id == assignment_id
+        ).first()
+
 
     # request-> task_id: UUID
     # response -> List[TaskAssignmentResponse]
@@ -61,3 +69,40 @@ class TaskAssignmentRepositoryImpl(ITaskAssignmentRepository):
         assignments = self.db.query(TaskAssignment).filter(
             TaskAssignment.task_id == task_id).all()
         return assignments
+    
+
+    # request -> assignment_id: UUID, status: TaskAssignmentStatus
+    # response -> TaskAssignmentResponse
+    def update_assignment_status(
+        self, assignment_id, status
+    ):
+        assignment = self.db.query(TaskAssignment).filter(
+            TaskAssignment.id == assignment_id 
+        ).first()
+        if not assignment:
+            return None
+        
+        assignment.status = status.value()
+        self.db.commit()
+        self.db.refresh(assignment)
+        return assignment
+
+
+    # request -> assignment_id: UUID, request: TaskAssignmentUpdateRequest
+    # response -> TaskAssignmentResponse
+    def update_assignment(self, assignment_id, request):
+        assignment = self.db.query(TaskAssignment).filter(
+            TaskAssignment.id == assignment_id
+        ).first()
+
+        if not assignment:
+            return None
+        
+        if request.user_id is not None:
+            assignment.user_id = request.user_id
+        if request.scheduled_on is not None:
+            assignment.scheduled_on = request.scheduled_on
+
+        self.db.commit()
+        self.db.refresh(assignment)
+        return assignment

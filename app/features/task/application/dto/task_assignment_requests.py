@@ -18,8 +18,17 @@ class TaskAssignmentRequest(BaseModel):
 
 class UpdateTaskAssignmentStatusRequest(BaseModel):
     status: TaskAssignmentStatus | None = None
-    completed_on: datetime | None = None
 
     model_config = {
         "from_attributes": True
     }
+
+
+class TaskAssignmentUpdateRequest(BaseModel):
+    user_id: UUID | None
+    scheduled_on: datetime | None
+
+    model_config = {
+        "from_attributes": True
+    }
+    

@@ -17,8 +17,12 @@ class CreateTaskUseCase:
         self.task_assignment_repository = task_assignment_repository
 
     async def execute(self, request: CreateTaskRequest, current_user_id):
+        #TODO: Validate the house_id and space_id
         task = self.task_repository.create_task(
             request=request, created_by=current_user_id
         )
+        # TODO: create task assignements
+        # 1. Get the member list
+        # 2. Create assignments for the members
         return task
     

@@ -1,0 +1,67 @@
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from fastapi import HTTPException
+import os
+
+from app.shared.utils.jwt_utils import create_access_token
+from app.features.auth.application.ports.user_repository import (
+    IUserRepository
+)
+from app.features.auth.application.dto.user_requests import (
+    CreateUser
+)
+from app.features.auth.application.dto.user_responses import (
+    AuthResponse, AuthUserResponse
+)
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+
+class GoogleLoginUseCase:
+    def __init__(
+        self,
+        user_repo: IUserRepository
+    ):
+        self.user_repo = user_repo
+
+    def execute(
+        self,
+        google_id_token: str
+    ):
+        try:
+            id_info = id_token.verify_oauth2_token(
+                google_id_token,
+                requests.Request(),
+                GOOGLE_CLIENT_ID
+            )
+
+            if id_info["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+                raise ValueError("Wrong issuer")
+            
+            google_id = id_info["sub"]
+            email = id_info["email"]
+            name = id_info.get("name")
+
+        except ValueError:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid Google token"
+            )
+        
+        user = self.user_repo.get_by_google_id(
+            google_id=google_id
+        )
+        if not user:
+            user = self.user_repo.create(
+                request=CreateUser(email=email, google_id=google_id, name=name)
+                )
+        access_token = create_access_token(data={"sub": str(user.id)})
+
+        return AuthResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user=AuthUserResponse(
+                id=str(user.id),
+                name=user.name,
+                email=user.email
+            )
+        )

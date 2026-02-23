@@ -7,14 +7,14 @@ from app.features.task.application.dto.task_requests import (
     CreateTaskRequest,
     UpdateTaskRequest, UpdateTaskStatusRequest
 )
-from app.features.task.application.use_cases.create_task import CreateTaskUseCase
-from app.features.task.application.use_cases.get_task_by_id import GetTaskByIdUseCase
-from app.features.task.application.use_cases.get_tasks_by_house import GetTasksByHouseUseCase
-from app.features.task.application.use_cases.get_tasks_by_house import GetTasksByHouseUseCase
-from app.features.task.application.use_cases.get_tasks_by_space import GetTasksBySpaceUseCase
-from app.features.task.application.use_cases.update_task import UpdateTaskUseCase
-from app.features.task.application.use_cases.delete_task import DeleteTaskUseCase
-from app.features.task.application.use_cases.update_task_status import UpdateTaskStatusUseCase
+from app.features.task.application.use_cases.task.create_task import CreateTaskUseCase
+from app.features.task.application.use_cases.task.get_task_by_id import GetTaskByIdUseCase
+from app.features.task.application.use_cases.task.get_tasks_by_house import GetTasksByHouseUseCase
+from app.features.task.application.use_cases.task.get_tasks_by_house import GetTasksByHouseUseCase
+from app.features.task.application.use_cases.task.get_tasks_by_space import GetTasksBySpaceUseCase
+from app.features.task.application.use_cases.task.update_task import UpdateTaskUseCase
+from app.features.task.application.use_cases.task.delete_task import DeleteTaskUseCase
+from app.features.task.application.use_cases.task.update_task_status import UpdateTaskStatusUseCase
 from app.features.task.infrastructure.repositories.task_repo import (
     TaskRepositoryImpl
 )

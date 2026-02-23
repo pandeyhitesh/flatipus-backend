@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, ForeignKey, DateTime, Boolean, Text
+from sqlalchemy import Column, String, ForeignKey, DateTime, Boolean, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -44,6 +44,7 @@ class HouseMember(Base):
         UUID(as_uuid=True), ForeignKey('houses.id'), nullable=False)
     joined_at = Column(DateTime, default=datetime.utcnow)
     role = Column(String, default="MEMBER")  # Possible roles: MEMBER, ADMIN
+    order = Column(Integer, nullable=False, autoincrement=True)
 
     user = relationship("User", back_populates="houses")
     house = relationship("House", back_populates="members")
@@ -85,6 +86,6 @@ class TaskAssignment(Base):
     task_id = Column(UUID(as_uuid=True), ForeignKey('tasks.id'), nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     scheduled_on = Column(DateTime, nullable=False)
-    completed_on = Column(DateTime, nullable=True)
+    updated_on = Column(DateTime, nullable=True)
     status = Column(String, nullable=False)  # Values from TaskAssignmentStatus enum
     is_completed = Column(Boolean, default=False)

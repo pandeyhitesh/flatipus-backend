@@ -12,7 +12,7 @@ class TaskAssignments:
         task_id: UUID,
         user_id: UUID,
         scheduled_on: datetime,
-        completed_on: datetime | None,
+        updated_on: datetime | None,
         status: TaskAssignmentStatus,
         is_completed: bool,
     ):
@@ -20,6 +20,6 @@ class TaskAssignments:
         self.task_id = task_id
         self.user_id = user_id
         self.scheduled_on = scheduled_on
-        self.completed_on = completed_on
+        self.updated_on = updated_on
         self.status = status
         self.is_completed = is_completed

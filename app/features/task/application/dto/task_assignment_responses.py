@@ -9,7 +9,7 @@ class TaskAssignmentResponse(BaseModel):
     user_id: UUID
     scheduled_on: datetime
     status: str
-    completed_on: datetime | None
+    updated_on: datetime | None
     is_completed: bool
 
     class Config:
