@@ -14,6 +14,7 @@ from app.features.house.application.dto.house_responses import (
 from app.features.house.application.use_cases.create_house import (
     CreateHouseUseCase
 )
+from app.features.house.application.use_cases.get_house_by_key import GetHouseByKeyUseCase
 from app.features.house.application.use_cases.join_house import (
     JoinHouseUserCase
 )
@@ -83,6 +84,19 @@ def get_house_details(
     return use_case.execute(
         house_id=house_id,
         current_user_id=current_user.id
+    )
+
+
+@router.get("/key/{house_key}", response_model=GetHouseResponse)
+def get_house_details_by_key(
+    house_key: str,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    house_repo = HouseRepositoryImpl(db)
+    use_case = GetHouseByKeyUseCase(house_repo)
+    return use_case.execute(
+        house_key=house_key
     )
 
 
