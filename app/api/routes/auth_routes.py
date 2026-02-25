@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session
+import os
 
 from app.shared.auth import oauth
 from app.models import User
@@ -20,7 +21,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 # -- WEB LOGIN --
 @router.get("/login")
 async def login(request: Request):
-    redirect_uri = "http://localhost:8000/auth/callback"
+    # redirect_uri = "http://localhost:8000/auth/callback"
+    redirect_uri = os.getenv(
+        "REDIRECT_URI",
+        "https://flatipus-backend-production.up.railway.app/auth/callback"
+    )
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
