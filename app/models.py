@@ -44,7 +44,7 @@ class HouseMember(Base):
         UUID(as_uuid=True), ForeignKey('houses.id'), nullable=False)
     joined_at = Column(DateTime, default=datetime.utcnow)
     role = Column(String, default="MEMBER")  # Possible roles: MEMBER, ADMIN
-    order = Column(Integer, nullable=False, autoincrement=True)
+    order = Column(Integer, nullable=False, autoincrement=True, server_default="1")
 
     user = relationship("User", back_populates="houses")
     house = relationship("House", back_populates="members")

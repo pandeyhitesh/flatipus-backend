@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models import HouseMember, User
+from sqlalchemy import func
 from app.features.house.application.ports.house_member_repository import (
     IHouseMemberRepository)
 
@@ -10,6 +11,10 @@ class HouseMemberRepositoryImpl(IHouseMemberRepository):
 
     # add a new member
     def add_member(self, house_member):
+        # Get current max order for this house and increment
+        max_order = self.db.query(func.max(HouseMember.order)).filter(
+            HouseMember.house_id == house_member.house_id
+        ).scalar() or 0
         member_model = HouseMember(
             house_id=house_member.house_id,
             user_id=house_member.user_id,
