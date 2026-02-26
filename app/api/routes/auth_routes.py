@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session
 import os
 
+from app.features.auth.application.dto.user_responses import AuthResponse
 from app.shared.auth import oauth
 from app.models import User
 from app.shared.utils.jwt_utils import create_access_token
@@ -70,7 +71,7 @@ async def auth_callback(request: Request, db: Session = Depends(get_db)):
 
 
 # -- MOBILE LOGIN --
-@router.post("/google-mobile")
+@router.post("/google-mobile", response_model=AuthResponse)
 def google_mobile_login(
     request: GoogleMobileLoginRequest,
     db: Session = Depends(get_db)
