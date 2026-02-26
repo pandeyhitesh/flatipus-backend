@@ -4,7 +4,7 @@ from uuid import UUID
 class CreateUser(BaseModel):
     email: str
     name: str
-    google_id: UUID
+    google_id: str
 
 class GoogleMobileLoginRequest(BaseModel):
     id_token: str
