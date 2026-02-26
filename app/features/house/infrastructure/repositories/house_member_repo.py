@@ -19,6 +19,7 @@ class HouseMemberRepositoryImpl(IHouseMemberRepository):
             house_id=house_member.house_id,
             user_id=house_member.user_id,
             role=house_member.role,
+            order=max_order + 1
         )
         self.db.add(member_model)
         self.db.commit()
