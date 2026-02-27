@@ -15,6 +15,7 @@ from app.features.auth.application.dto.user_responses import (
 )
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_ANDROID_CLIENT_ID = os.getenv("GOOGLE_ANDROID_CLIENT_ID")
 
 class GoogleLoginUseCase:
     def __init__(
@@ -28,11 +29,21 @@ class GoogleLoginUseCase:
         google_id_token: str
     ):
         try:
-            id_info = id_token.verify_oauth2_token(
-                google_id_token,
-                requests.Request(),
-                GOOGLE_CLIENT_ID
-            )
+            # try veryfying against the web client ID first
+            id_info = None
+            for client_id in filter(None, [GOOGLE_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID]):
+                try:
+                    id_info = id_token.verify_oauth2_token(
+                        google_id_token,
+                        requests.Request(),
+                        client_id
+                    )
+                    break
+                except ValueError:
+                    continue  # try the next client ID
+
+            if not id_info:
+                raise ValueError("Token verification failed for all client IDs")
 
             if id_info["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
                 raise ValueError("Wrong issuer")
@@ -41,7 +52,8 @@ class GoogleLoginUseCase:
             email = id_info["email"]
             name = id_info.get("name")
 
-        except ValueError:
+        except ValueError as e:
+            print(f"Token verification failed: {e}, client_id used: {GOOGLE_CLIENT_ID}")
             raise HTTPException(
                 status_code=401,
                 detail="Invalid Google token"
