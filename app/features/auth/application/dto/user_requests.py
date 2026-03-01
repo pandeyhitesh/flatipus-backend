@@ -1,10 +1,12 @@
 from pydantic import BaseModel
 from uuid import UUID
 
-class CreateUser(BaseModel):
+class CreateUserRequest(BaseModel):
     email: str
     name: str
     google_id: str
+    phone_number: str | None = None
+    photoURL: str | None = None
 
 class GoogleMobileLoginRequest(BaseModel):
     id_token: str

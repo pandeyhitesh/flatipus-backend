@@ -4,7 +4,7 @@ from app.features.auth.application.dto.user_responses import (
     UserResponse
 )
 from app.features.auth.application.dto.user_requests import (
-     CreateUser
+     CreateUserRequest
 )
 from app.features.auth.application.ports.user_repository import (
     IUserRepository
@@ -21,7 +21,7 @@ class CreateUserUseCase:
     
     def execute(
         self,
-        request: CreateUser
+        request: CreateUserRequest
     ) -> UserResponse:
         user = self.user_repo.create(
             request=request
