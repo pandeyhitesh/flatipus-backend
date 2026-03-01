@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
+from typing import Optional
 
 class UserResponse(BaseModel):
     id: str
@@ -17,6 +18,8 @@ class AuthUserResponse(BaseModel):
     id: str
     name: str
     email: str
+    phone_number: Optional[str] = None
+    photo_url: Optional[str] = None
 
     class Config:
         from_attributes = True

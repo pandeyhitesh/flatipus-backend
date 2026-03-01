@@ -29,6 +29,7 @@ class JoinHouseUserCase:
 
         self.house_member_repo.add_member(
             HouseMember(
+                id=None,
                 house_id=house.id,
                 user_id=current_user_id,
                 role=UserRole.MEMBER.value,
