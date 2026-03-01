@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from app.features.auth.application.dto.user_requests import (
-    CreateUser
+    CreateUserRequest
 )
 
 class IUserRepository(ABC):
@@ -30,6 +30,6 @@ class IUserRepository(ABC):
     @abstractmethod
     def create(
         self,
-        request: CreateUser
+        request: CreateUserRequest
     ): 
         pass

@@ -8,7 +8,7 @@ from app.features.auth.application.ports.user_repository import (
     IUserRepository
 )
 from app.features.auth.application.dto.user_requests import (
-    CreateUser
+    CreateUserRequest
 )
 from app.features.auth.application.dto.user_responses import (
     AuthResponse, AuthUserResponse
@@ -51,6 +51,7 @@ class GoogleLoginUseCase:
             google_id = id_info["sub"]
             email = id_info["email"]
             name = id_info.get("name")
+            photoURL = id_info.get("picture")
 
         except ValueError as e:
             print(f"Token verification failed: {e}, client_id used: {GOOGLE_CLIENT_ID}")
@@ -64,8 +65,13 @@ class GoogleLoginUseCase:
         )
         if not user:
             user = self.user_repo.create(
-                request=CreateUser(email=email, google_id=google_id, name=name)
+                request=CreateUserRequest(
+                    email=email, 
+                    google_id=google_id, 
+                    name=name,
+                    photoURL=photoURL,
                 )
+            )
         access_token = create_access_token(data={"sub": str(user.id)})
 
         return AuthResponse(
@@ -74,6 +80,7 @@ class GoogleLoginUseCase:
             user=AuthUserResponse(
                 id=str(user.id),
                 name=user.name,
-                email=user.email
+                email=user.email,
+                photoURL=user.photoURL
             )
         )
