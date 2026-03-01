@@ -6,7 +6,7 @@ class CreateUserRequest(BaseModel):
     name: str
     google_id: str
     phone_number: str | None = None
-    photoURL: str | None = None
+    photo_url: str | None = None
 
 class GoogleMobileLoginRequest(BaseModel):
     id_token: str

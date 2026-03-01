@@ -69,7 +69,7 @@ class GoogleLoginUseCase:
                     email=email, 
                     google_id=google_id, 
                     name=name,
-                    photoURL=photoURL,
+                    photo_url=photoURL,
                 )
             )
         access_token = create_access_token(data={"sub": str(user.id)})
@@ -81,6 +81,6 @@ class GoogleLoginUseCase:
                 id=str(user.id),
                 name=user.name,
                 email=user.email,
-                photoURL=user.photoURL
+                photo_url=user.photo_url
             )
         )

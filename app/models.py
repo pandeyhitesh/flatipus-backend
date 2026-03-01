@@ -15,7 +15,7 @@ class User(Base):
     google_id = Column(String, unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     phone_number = Column(String, nullable=True)
-    photoURL = Column(String, nullable=True)
+    photo_url = Column(String, nullable=True)
 
     houses = relationship("HouseMember", back_populates="user")
 

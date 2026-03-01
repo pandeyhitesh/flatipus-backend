@@ -38,6 +38,7 @@ class UserRepositoryImpl(IUserRepository):
             email=request.email,
             name=request.name,
             google_id=request.google_id,
+            photo_url=request.photo_url,
         )
 
         self.db.add(user)
