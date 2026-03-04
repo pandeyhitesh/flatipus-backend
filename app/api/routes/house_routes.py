@@ -3,13 +3,14 @@ from sqlalchemy.orm import Session
 from fastapi import Query
 from uuid import UUID
 
+from app.features.auth.infrastructure.user_repo import UserRepositoryImpl
 from app.features.house.application.dto.house_requests import (
     CreateHouseRequest,
     JoinHouseRequest,
     UpdateMemberRoleRequest)
 from app.features.house.application.dto.house_responses import (
+    HouseDetailResponse,
     HouseResponse,
-    GetHouseResponse,
     MyHousesResponse)
 from app.features.house.application.use_cases.create_house import (
     CreateHouseUseCase
@@ -72,7 +73,7 @@ def join_house(
     )
 
 
-@router.get("/{house_id:uuid}", response_model=GetHouseResponse)
+@router.get("/{house_id:uuid}", response_model=HouseDetailResponse)
 def get_house_details(
     house_id: UUID,
     db: Session = Depends(get_db),
@@ -80,14 +81,15 @@ def get_house_details(
 ):
     house_repo = HouseRepositoryImpl(db)
     member_repo = HouseMemberRepositoryImpl(db)
-    use_case = GetHouseDetailsUseCase(house_repo, member_repo)
+    user_repo = UserRepositoryImpl(db)
+    use_case = GetHouseDetailsUseCase(house_repo, member_repo, user_repo)
     return use_case.execute(
         house_id=house_id,
         current_user_id=current_user.id
     )
 
 
-@router.get("/key/{house_key}", response_model=GetHouseResponse)
+@router.get("/key/{house_key}", response_model=HouseDetailResponse)
 def get_house_details_by_key(
     house_key: str,
     db: Session = Depends(get_db),

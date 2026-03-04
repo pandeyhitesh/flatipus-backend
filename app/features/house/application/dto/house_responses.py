@@ -14,20 +14,15 @@ class HouseResponse(BaseModel):
         from_attributes = True
 
 
-class HouseDetailResponse(BaseModel):
-    id: UUID
-    house_name: str
-    house_key: str
-    address: str
-    created_by: UUID
+# class HouseDetailResponse(BaseModel):
+#     id: UUID
+#     house_name: str
+#     house_key: str
+#     address: str
+#     created_by: UUID
 
-    class Config:
-        from_attributes = True
-
-
-class GetHouseResponse(BaseModel):
-    house: HouseDetailResponse
-    members: list[MemberInfo]
+#     class Config:
+#         from_attributes = True
 
 
 class MyHousesResponse(BaseModel):
@@ -35,3 +30,21 @@ class MyHousesResponse(BaseModel):
     limit: int
     offset: int
     houses: list[MyHouseItem]
+
+class HouseMemberResponse(BaseModel):
+    id: UUID
+    user_id: UUID
+    house_id: UUID
+    name: str
+    joined_at: str
+    role: str
+    order: int
+    photo_url: str
+    
+    class Config:
+        from_attributes = True
+
+
+class HouseDetailResponse(BaseModel):
+    house: HouseResponse
+    members: list[HouseMemberResponse]
