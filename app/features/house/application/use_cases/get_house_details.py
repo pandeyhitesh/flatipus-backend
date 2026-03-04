@@ -30,9 +30,10 @@ class GetHouseDetailsUseCase:
             raise HTTPException(status_code=403, detail="Access denied")
 
         members = self.member_repo.get_house_members(house.id)
-        user = self.user_repo.get_user_by_id(house.created_by)
+        
         members_response = []
         for member in members:
+            user = self.user_repo.get_by_id(member.user_id)
             mbr = HouseMemberResponse(
                 id=member.id,
                 user_id=member.user_id,
