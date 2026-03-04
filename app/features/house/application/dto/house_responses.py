@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from uuid import UUID
+from typing import Optional
+
 from app.features.house.application.dto.house_views import (
     MemberInfo, MyHouseItem)
 
@@ -35,12 +37,12 @@ class HouseMemberResponse(BaseModel):
     id: UUID
     user_id: UUID
     house_id: UUID
-    name: str
-    email: str
-    joined_at: str
-    role: str
-    order: int
-    photo_url: str
+    name: Optional[str] = None
+    email: Optional[str] = None
+    joined_at: Optional[str] = None
+    role: Optional[str] = None
+    order: Optional[int] = None
+    photo_url: Optional[str] = None
     
     class Config:
         from_attributes = True
