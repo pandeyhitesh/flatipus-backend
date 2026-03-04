@@ -33,22 +33,18 @@ class GetHouseDetailsUseCase:
         
         members_response = []
         for member in members:
-            user = self.user_repo.get_by_id(member.user_id)
             mbr = HouseMemberResponse(
-                id=member.id,
-                user_id=member.user_id,
-                house_id=member.house_id,
-                name=user.name,
-                joined_at=member.joined_at.isoformat(),
-                role=member.role,
-                order=member.order,
-                photo_url=user.photo_url
+                id=member["id"],
+                user_id=member["user_id"],
+                house_id=member["house_id"],
+                name=member["name"],
+                email=member["email"],
+                joined_at=member["joined_at"].isoformat(),
+                role=member["role"],
+                order=member["order"],
+                photo_url=member["photo_url"]
             )
             members_response.append(mbr)
-        # return {
-        #     "house": house,
-        #     "members": members_response,
-        # }
         return HouseDetailResponse(
             house=house, 
             members=members_response,

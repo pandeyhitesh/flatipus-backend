@@ -56,7 +56,7 @@ class HouseMemberRepositoryImpl(IHouseMemberRepository):
     # get house members with thier roles
     def get_house_members(self, house_id):
         results = (
-            self.db.query(User, HouseMember.role)
+            self.db.query(User, HouseMember)
             .join(HouseMember, HouseMember.user_id == User.id)
             .filter(HouseMember.house_id == house_id)
             .all()
@@ -64,12 +64,17 @@ class HouseMemberRepositoryImpl(IHouseMemberRepository):
         # Transform tuples into dictionaries that match the MemberInfo schema
         return [
             {
-                "id": str(user.id),
-                "name": user.name,
-                "email": user.email,
-                "role": role,
-            }
-            for user, role in results
+            "id": member.id,
+            "user_id": member.user_id,
+            "house_id": member.house_id,
+            "name": user.name,
+            "email": user.email,
+            "role": member.role,
+            "joined_at": member.joined_at,
+            "order": member.order,
+            "photo_url": user.photo_url,
+        }
+            for user, member in results
         ]
 
     # update role of a member

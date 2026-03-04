@@ -36,6 +36,7 @@ class HouseMemberResponse(BaseModel):
     user_id: UUID
     house_id: UUID
     name: str
+    email: str
     joined_at: str
     role: str
     order: int
